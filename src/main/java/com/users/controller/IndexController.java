@@ -33,7 +33,7 @@ public class IndexController {
 	@Autowired
 	private UserImageRepository userImageRepo;
 	
-	
+	@Autowired
 	private PermissionService permissionService;
 
 	@RequestMapping("/greeting")
