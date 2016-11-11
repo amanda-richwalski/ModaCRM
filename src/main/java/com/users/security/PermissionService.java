@@ -8,9 +8,10 @@ import com.users.repositories.ContactRepository;
 import com.users.repositories.UserRepository;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import static com.users.security.Role.USER;
-import static com.users.security.Role.ADMIN;
+import com.users.security.Role;
 
+import static com.users.security.Role.ROLE_ADMIN;
+import static com.users.security.Role.ROLE_USER;
 
 @Service
 public class PermissionService {
@@ -41,11 +42,15 @@ public class PermissionService {
 	
 	//step2-the user role is being allowed to edit the contacts, and we're finding the user by userId
 	public boolean canEditUser(long userId) {
-		return hasRole(ADMIN) || (hasRole(USER) && findCurrentUserId() == userId);
+		return hasRole(ROLE_ADMIN) || (hasRole(ROLE_USER) && findCurrentUserId() == userId);
+	}
+	
+	public boolean canAccessUser(long userId) {
+		return hasRole(ROLE_ADMIN) || (hasRole(ROLE_USER) && findCurrentUserId() == userId);
 	}
 	
 	public boolean canEditContact(long contactId) {
-		return hasRole(USER) && contactRepo.findByUserIdAndId(findCurrentUserId(), contactId) != null;
+		return hasRole(ROLE_USER) && contactRepo.findByUserIdAndId(findCurrentUserId(), contactId) != null;
 	}
 
 
@@ -53,6 +58,9 @@ public class PermissionService {
 		return userRepo.findByEmail(getToken().getName()).get(0).getId();
 	}
 
+
+	}
+
 	
 
-}
+

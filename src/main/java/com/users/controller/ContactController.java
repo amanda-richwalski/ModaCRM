@@ -5,7 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.CollectionUtils;
 
+import com.users.security.Role;
 import com.users.beans.Contact;
 import com.users.beans.ContactImage;
 import com.users.repositories.ContactImageRepository;
@@ -40,6 +41,7 @@ public class ContactController {
 	
 	
 	//we're calling to the list of contacts to make sure we can see them on the app through our security method
+	@Secured("ROLE_USER")
 	@RequestMapping("/contacts")
 	public String listContacts(Model model) {
 		long currentUserId = permissionService.findCurrentUserId();
@@ -47,7 +49,7 @@ public class ContactController {
 	contactRepo.findAllByUserIdOrderByFirstNameAscLastNameAsc(currentUserId));
 		return "listContacts";
 	}
-	
+	@Secured("ROLE_USER")
 	@RequestMapping("/contact/{contactId}")
 	public String contact(@PathVariable long contactId, Model model) {
 		model.addAttribute("contact", contactRepo.findOne(contactId));
@@ -60,6 +62,7 @@ public class ContactController {
 		return "contact";
 	}
 	
+	@Secured("ROLE_USER")
 	@RequestMapping(value = "/contact/{contactId}/edit", method = RequestMethod.GET)
 	public String contactEdit(@PathVariable long contactId, Model model) {
 		model.addAttribute("contact", contactRepo.findOne(contactId));
@@ -76,6 +79,7 @@ public class ContactController {
 		return "contactEdit";
 	}
 	
+	@Secured("ROLE_USER")
 	@RequestMapping(value = "/contact/{contactId}/edit", method = RequestMethod.POST)
 	public String profileSave(@ModelAttribute Contact contact, @PathVariable long contactId,
 			@RequestParam(name = "removeImage", defaultValue = "false") boolean removeImage,
@@ -117,6 +121,25 @@ public class ContactController {
 		return contact(contactId, model);
 	}
 
+	//step 3 - only admin able to create new contacts 
+	@Secured("ROLE_USER")
+	@RequestMapping(value = "/contact/create", method = RequestMethod.GET)
+	public String createContact(Model model) {
+		model.addAttribute("contact", new Contact(permissionService.findCurrentUserId()));
+		
+		return "contactCreate";
+	}
+	
+	//step 3 - only admin able to create new contacts save
+	@Secured("ROLE_USER")
+	@RequestMapping(value = "/contact/create", method = RequestMethod.POST)
+	public String createContact(@ModelAttribute Contact contact,
+			@RequestParam("file") MultipartFile file, Model model) {
+
+		Contact savedContact = contactRepo.save(contact);
+
+		return profileSave(savedContact, savedContact.getId(), false, file, model);
+	}
 
 
 }

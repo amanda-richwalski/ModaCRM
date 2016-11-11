@@ -17,15 +17,15 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="contact : ${contacts}">
-				<td th:text="${contact.firstName}"></td>
-				<td th:text="${contact.lastName}"></td>
-				<td th:text="${contact.email}"></td>
-				<td th:text="${contact.phoneNumber}"></td>
-				<td><a href="/" th:href="@{|/contact/${contact.id}|}">Profile</a></td>
-				<a href="/contact/create">Create Contact</a>
+			<tr th:each="user : ${users}">
+				<td th:text="${user.firstName}"></td>
+				<td th:text="${user.lastName}"></td>
+				<td th:text="${user.email}"></td>
+				<td th:text="${user.phoneNumber}"></td>
+				<td><a href="/" th:href="@{|/user/${user.id}|}">Profile</a></td>
 			</tr>			
 		</tbody>
 	</table>
+	<a href="/user/create">Create Contact</a>
 </body>
 </html>
