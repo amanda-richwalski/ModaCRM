@@ -1,12 +1,16 @@
 package com.users.security;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.users.beans.User;
 import com.users.repositories.ContactRepository;
 import com.users.repositories.UserRepository;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import com.users.security.Role;
 
@@ -23,8 +27,8 @@ public class PermissionService {
 	private ContactRepository contactRepo;
 	
 	//Simple user name and password authentication when logging in
-	private UsernamePasswordAuthenticationToken getToken() {
-		return (UsernamePasswordAuthenticationToken) 
+	private AbstractAuthenticationToken getToken() {
+		return (AbstractAuthenticationToken) 
 				getContext().getAuthentication();
 }
 	
@@ -55,8 +59,10 @@ public class PermissionService {
 
 
 	public long findCurrentUserId() {
-		return userRepo.findByEmail(getToken().getName()).get(0).getId();
+		List<User> users = userRepo.findByEmail(getToken().getName());
+		return users != null && !users.isEmpty() ? users.get(0).getId() : -1;
 	}
+
 
 
 	}
