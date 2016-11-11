@@ -62,7 +62,17 @@ public class PermissionService {
 		List<User> users = userRepo.findByEmail(getToken().getName());
 		return users != null && !users.isEmpty() ? users.get(0).getId() : -1;
 	}
-
+	
+	//i think the token is finding the user email is sql
+	public String getCurrentEmail() {
+		return getToken().getName();
+	}
+	
+	//i think this is looking for the user name by their email, and the other method is finding user by user id
+	public User findCurrentUser() {
+		List<User> users = userRepo.findByEmail(getToken().getName());
+		return users != null && !users.isEmpty() ? users.get(0) : new User();
+	}
 
 
 	}
