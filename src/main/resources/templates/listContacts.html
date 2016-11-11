@@ -1,11 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/basic">
 <head>
-    <title>Users</title>
+    <title>Contacts</title>
     <meta http-equiv=" Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body layout:fragment="content">
 	<h1>Contacts</h1>
+	<form th:action="@{|/contact/search|}" method="POST">
+	   <input type="text" placeholder="Search..." name="search" th:value="${search}" />
+	   <input type="submit" th:value="Search"/>
+	</form> 
+	
 	<table>
 		<thead>
 			<tr>
@@ -23,9 +28,10 @@
 				<td th:text="${contact.email}"></td>
 				<td th:text="${contact.phoneNumber}"></td>
 				<td><a href="/" th:href="@{|/contact/${contact.id}|}">Profile</a></td>
-				<a href="/contact/create">Create Contact</a>
+				
 			</tr>			
 		</tbody>
 	</table>
+	<a href="/contact/create">Create Contact</a>
 </body>
 </html>

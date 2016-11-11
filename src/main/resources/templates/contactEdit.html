@@ -23,8 +23,8 @@
 <body layout:fragment="content">
 	<h1>User</h1>
 	<form th:action="@{|/contact/${contact.id}/edit|}" enctype="multipart/form-data" method="POST">
-		<input name="id" type="hidden" th:value="${user.id}"/>
-			
+		<input name="id" type="hidden" th:value="${contact.id}"/>
+		<input name="userId" type="hidden" th:value="${contact.userId}"/>
 		<div class="field">
 			<label for="firstName">First Name</label>
 			<input name="firstName" type="text" th:value="${contact.firstName}"/>
@@ -41,14 +41,18 @@
 		</div>
 		
 		<div class="field">
-			<label for="password">Password</label>
-			<input name="password" type="password" th:value="${contact.password}"/>
-		</div>
-		
-		<div class="field">
 			<label for="phoneNumber">Phone Number</label>
 			<input name="phoneNumber" type="text" th:value="${contact.phoneNumber}"/>
 		</div>
+		<div class="field">
+          <label for="twitterHandle">Twitter Handle</label>
+          <input name="twitterHandle" type="text" th:value="${contact.twitterHandle}"/>
+        </div>
+        
+        <div class="field">
+          <label for="facebookUrl">Facebook URL</label>
+          <input name="facebookUrl" type="text" th:value="${contact.facebookUrl}"/>
+        </div>
 		
 		<div class="field">
 			<label for="file">Image</label>
@@ -61,7 +65,7 @@
 		</div>
 		
 		<input type="submit" th:value="Update"/>
-		<a href="/" th:href="@{|/contact/${contact.id}|}">Back</a>
+		<a href="/contacts" th:href="@{|/contact/${contact.id}|}">Back</a>
 	</form>
 </body>
 </html>

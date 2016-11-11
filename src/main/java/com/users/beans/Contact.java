@@ -24,14 +24,17 @@ public class Contact {
 	private String email;
 	private String phoneNumber;
 	private boolean active;
+	private String twitterHandle;
+	private String facebookUrl;
 	
 	
 	
 	public Contact(long userId) {
 		this.userId = userId;
+		this.active = true;
 	}
 
-	public Contact(long userId, String firstName, String lastName, String email, String phoneNumber, boolean active) {
+	public Contact(long userId, String firstName, String lastName, String email, String phoneNumber, boolean active, String twitterHandle, String facebookUrl) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -39,8 +42,26 @@ public class Contact {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.active = active;
+		this.twitterHandle = twitterHandle;
+		this.facebookUrl = facebookUrl;
 	}
 	
+	public String getTwitterHandle() {
+		return twitterHandle;
+	}
+
+	public void setTwitterHandle(String twitterHandle) {
+		this.twitterHandle = twitterHandle;
+	}
+
+	public String getFacebookUrl() {
+		return facebookUrl;
+	}
+
+	public void setFacebookUrl(String facebookUrl) {
+		this.facebookUrl = facebookUrl;
+	}
+
 	protected Contact(){
 	}
 
@@ -104,7 +125,7 @@ public class Contact {
 	@Override
 	public String toString() {
 		return "User[id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + ", phoneNumber=" + phoneNumber + ", active=" + active + "]";
+				+ ", email=" + email + ", phoneNumber=" + phoneNumber + ", active=" + active + ", twitterHandle=" + twitterHandle + ", facebookUrl=" + facebookUrl + "]";
 	}
 	
 	
