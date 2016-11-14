@@ -7,9 +7,7 @@ public class Email {
 	private String message;
 	private String custom;
 	
-	public Email(){
-		
-	}
+	public Email(){}
 
 	public Email(String to, String subject, String message, String custom) {
 		this.to = to;

@@ -43,15 +43,26 @@ public class ContactController {
 	private PermissionService permissionService;
 	
 	
-	//we're calling to the list of contacts to make sure we can see them on the app through our security method
 	@Secured("ROLE_USER")
 	@RequestMapping("/contacts")
 	public String listContacts(Model model) {
 		long currentUserId = permissionService.findCurrentUserId();
 		model.addAttribute("contacts",
-	contactRepo.findAllByUserIdOrderByFirstNameAscLastNameAsc(currentUserId));
+				contactRepo.findAllByUserIdOrderByFirstNameAscLastNameAsc(currentUserId));
 		return "listContacts";
 	}
+	
+	@Secured("ROLE_USER")
+	@RequestMapping(value = "/contact/search", method = RequestMethod.POST)
+	public String searchUsers(@RequestParam("search") String search, Model model) {
+		log.debug("Searching by " + search);
+		model.addAttribute("contacts",
+				contactRepo.findByLastNameOrFirstNameOrEmailOrTwitterHandleOrFacebookUrlIgnoreCase(
+						search, search, search, search, search));
+		model.addAttribute("search", search);
+		return "listContacts";
+	}
+
 	@Secured("ROLE_USER")
 	@RequestMapping("/contact/{contactId}")
 	public String contact(@PathVariable long contactId, Model model) {
@@ -64,7 +75,7 @@ public class ContactController {
 		model.addAttribute("permissions", permissionService);
 		return "contact";
 	}
-	
+
 	@Secured("ROLE_USER")
 	@RequestMapping(value = "/contact/{contactId}/edit", method = RequestMethod.GET)
 	public String contactEdit(@PathVariable long contactId, Model model) {
@@ -81,7 +92,7 @@ public class ContactController {
 		}
 		return "contactEdit";
 	}
-	
+
 	@Secured("ROLE_USER")
 	@RequestMapping(value = "/contact/{contactId}/edit", method = RequestMethod.POST)
 	public String profileSave(@ModelAttribute Contact contact, @PathVariable long contactId,
@@ -124,16 +135,14 @@ public class ContactController {
 		return contact(contactId, model);
 	}
 
-	//step 3 - only admin able to create new contacts 
 	@Secured("ROLE_USER")
 	@RequestMapping(value = "/contact/create", method = RequestMethod.GET)
 	public String createContact(Model model) {
 		model.addAttribute("contact", new Contact(permissionService.findCurrentUserId()));
-		
+
 		return "contactCreate";
 	}
-	
-	//step 3 - only admin able to create new contacts save
+
 	@Secured("ROLE_USER")
 	@RequestMapping(value = "/contact/create", method = RequestMethod.POST)
 	public String createContact(@ModelAttribute Contact contact,
@@ -144,7 +153,6 @@ public class ContactController {
 		return profileSave(savedContact, savedContact.getId(), false, file, model);
 	}
 
-	//i think the app will be mapping the user to utilize contact id to create and send an email to include the following variables
 	@Secured("ROLE_USER")
 	@RequestMapping(value = "/email/contact/{contactId}", method = RequestMethod.GET)
 	public String prepEmailContact(@PathVariable long contactId, Model model) {
@@ -177,5 +185,4 @@ public class ContactController {
 		return "sendMail";
 	}
 
-	
 }

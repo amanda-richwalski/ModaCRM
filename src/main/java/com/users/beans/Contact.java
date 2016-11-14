@@ -28,6 +28,8 @@ public class Contact {
 	private String facebookUrl;
 	
 	
+	protected Contact(){
+	}
 	
 	public Contact(long userId) {
 		this.userId = userId;
@@ -35,7 +37,6 @@ public class Contact {
 	}
 
 	public Contact(long userId, String firstName, String lastName, String email, String phoneNumber, boolean active, String twitterHandle, String facebookUrl) {
-		super();
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -62,8 +63,6 @@ public class Contact {
 		this.facebookUrl = facebookUrl;
 	}
 
-	protected Contact(){
-	}
 
 	public long getId() {
 		return id;

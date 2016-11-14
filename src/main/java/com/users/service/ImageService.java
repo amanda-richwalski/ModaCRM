@@ -10,13 +10,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.users.beans.User;
 import com.users.beans.UserImage;
+import com.users.controller.ContactController;
 import com.users.repositories.UserImageRepository;
 
 
 @Service
 public class ImageService {
 
-	private static final Logger log = LoggerFactory.getLogger(ImageService.class);
+	private static final Logger log = LoggerFactory.getLogger(ContactController.class);
 	
 	@Autowired
 	private UserImageRepository userImageRepo;

@@ -12,7 +12,7 @@
 <body layout:fragment="content">
 	<h1 th:text="${pageTitle}"></h1>
 	<form th:action="@{|/email/send|}" enctype="multipart/form-data" method="POST">
-        <input name="message" type="hidden" th:value="${message}" />
+    <input name="message" type="hidden" th:value="${message}" />
         
         <div class="field">
             <label for="to">Email To</label>
@@ -29,6 +29,7 @@
 			<label for="custom">Message</label>
 			<textarea name="custom"></textarea>
 		</div>
+		
 		<input type="submit" th:value="Update"/>
 		<a href="/">Back</a>
 	</form>

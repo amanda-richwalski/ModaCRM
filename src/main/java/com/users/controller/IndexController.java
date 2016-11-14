@@ -57,58 +57,18 @@ public class IndexController {
 
 	@RequestMapping("/greeting")
 	public String greeting(
-			@RequestParam(value = "name", required = false, defaultValue = "World") String name,
-			Model model) {
-		model.addAttribute("name", name);
-		model.addAttribute("repoCount", userRepo.count());
-		return "greeting";
-	}
+		@RequestParam(value = "name", required = false, defaultValue = "World") String name,
+		Model model) {
+	model.addAttribute("name", name);
+	model.addAttribute("repoCount", userRepo.count());
+	return "greeting";
+}
 
-
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView getLoginPage(@RequestParam Optional<String> error) {
-		return new ModelAndView("login", "error", error);
-	}
 	
 	@RequestMapping("/")
 	public String home(Model model) {
 		return permissionService.hasRole(ROLE_ADMIN) ? "redirect:/users" : "redirect:/contacts";
 	}
-	
-	@RequestMapping("/myprofile")
-	public String myprofile(Model model) {
-		return profile(permissionService.findCurrentUserId(), model);
-	}
-	
-	@RequestMapping("/register")
-	public String register(Model model) {
-		return createUser(model);
-	}
-
-	
-	// step - 4  the admin role is able to create new users
-	@RequestMapping(value = "/user/create", method = RequestMethod.GET)
-	public String createUser(Model model) {
-		model.addAttribute("user", new User());
-		
-		return "userCreate";
-	}
-	
-	@RequestMapping(value = "/user/create", method = RequestMethod.POST)
-	public String createUser(@ModelAttribute User user,
-		@RequestParam("file") MultipartFile file, Model model) {
-
-		log.info(user.toString());
-
-		User savedUser = userRepo.save(user);
-		UserRole role = new UserRole(savedUser, ROLE_USER);		
-		userRoleRepo.save(role);
-		imageService.saveImage(file, savedUser);
-		
-		return profile(savedUser.getId(), model);
-
-	}
-
 
 	@Secured("ROLE_ADMIN")
 	@RequestMapping("/users")
@@ -116,32 +76,55 @@ public class IndexController {
 		model.addAttribute("users", userRepo.findAllByOrderByFirstNameAscLastNameAsc());
 		return "listUsers";
 	}
+
+	@Secured("ROLE_ADMIN")
+	@RequestMapping(value = "/user/search", method = RequestMethod.POST)
+	public String searchUsers(@RequestParam("search") String search, Model model) {
+		log.debug("Searching by " + search);
+		model.addAttribute("users",
+				userRepo.findByLastNameOrFirstNameOrEmailOrTwitterHandleOrFacebookUrlIgnoreCase(
+						search, search, search, search, search));
+		model.addAttribute("search", search);
+		return "listUsers";
+	}
 	
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public ModelAndView getLoginPage(@RequestParam Optional<String> error) {
+		return new ModelAndView("login", "error", error);
+	}
+	
+	@RequestMapping("/myprofile")
+	public String myprofile(Model model) {
+		return profile(permissionService.findCurrentUserId(), model);
+	}
+
+	@RequestMapping("/register")
+	public String register(Model model) {
+	return createUser(model);
+}
+
 	@RequestMapping("/user/{userId}")
 	public String profile(@PathVariable long userId, Model model) {
 		model.addAttribute("user", userRepo.findOne(userId));
-		
-		if(!permissionService.canAccessUser(userId)) {
+
+		if (!permissionService.canAccessUser(userId)) {
 			log.warn("Cannot allow user to view " + userId);
 			return "redirect:/";
 		}
 
-		
 		List<UserImage> images = userImageRepo.findByUserId(userId);
 		if (!CollectionUtils.isEmpty(images)) {
 			model.addAttribute("userImage", images.get(0));
 		}
-	
-		model.addAttribute("permissions", permissionService);	
+		model.addAttribute("permissions", permissionService);
 		return "profile";
 	}
-			
 
 	@RequestMapping(value = "/user/{userId}/edit", method = RequestMethod.GET)
 	public String profileEdit(@PathVariable long userId, Model model) {
 		model.addAttribute("user", userRepo.findOne(userId));
 		
-		if(!permissionService.canAccessUser(userId)) {
+		if (!permissionService.canAccessUser(userId)) {
 			log.warn("Cannot allow user to edit " + userId);
 			return "profile";
 		}
@@ -159,12 +142,12 @@ public class IndexController {
 			@RequestParam(name = "removeImage", defaultValue = "false") boolean removeImage,
 			@RequestParam("file") MultipartFile file,
 			Model model) {
-		
-		if(!permissionService.canEditUser(userId)) {
+
+		if (!permissionService.canAccessUser(userId)) {
 			log.warn("Cannot allow user to edit " + userId);
 			return "profile";
 		}
-
+		
 		log.debug("Saving user " + user);
 		userRepo.save(user);
 		model.addAttribute("message", "User " + user.getEmail() + " saved.");
@@ -173,14 +156,33 @@ public class IndexController {
 			imageService.deleteImage(user);
 		} else {
 			imageService.saveImage(file, user);
-		
 		}
 
+		
 		return profile(userId, model);
 	}
 	
-	//Creating mapping to send an email
-	//sendMessage is sending the message to the specified list of addresses
+	@RequestMapping(value = "/user/create", method = RequestMethod.GET)
+	public String createUser(Model model) {
+		model.addAttribute("user", new User());
+		
+		return "userCreate";
+	}
+	
+	@RequestMapping(value = "/user/create", method = RequestMethod.POST)
+	public String createUser(@ModelAttribute User user,
+			@RequestParam("file") MultipartFile file, Model model) {
+
+		log.info(user.toString());
+		
+		User savedUser = userRepo.save(user);
+		UserRole role = new UserRole(savedUser, ROLE_USER);		
+		userRoleRepo.save(role);
+		imageService.saveImage(file, savedUser);
+
+		return profile(savedUser.getId(), model);
+	}
+	
 	@RequestMapping(value = "/email/send", method = RequestMethod.POST)
 	public String sendEmail(Email email, Model model) {
 		emailService.sendMessage(email);
@@ -188,7 +190,6 @@ public class IndexController {
 		return "redirect:/";
 	}
 	
-	//i think this method is mapping an email sent if someone registers for a login for the app
 	@RequestMapping(value = "/email/user", method = RequestMethod.GET)
 	public String prepEmailUser(Model model) {
 		String url = "http://localhost:8080/register/";
@@ -198,8 +199,5 @@ public class IndexController {
 		model.addAttribute("subject", "Join me on SRM");
 
 		return "sendMail";
-	}
-	
-
-
+	}	
 }

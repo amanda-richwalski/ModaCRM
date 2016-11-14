@@ -64,8 +64,8 @@ public class EmailService {
 		try {
 				message.setRecipient(TO, new InternetAddress(email.getTo()));
 				message.setReplyTo(
-					new Address[] { new 
-	InternetAddress(permissionService.getCurrentEmail()) });
+					new Address[] { new InternetAddress(permissionService.getCurrentEmail()) });
+	
 			message.setSubject(email.getSubject());
 			message.setText(email.getCustom() + "\n\n" + email.getMessage());
 

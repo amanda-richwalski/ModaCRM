@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/basic">
 <head>
-    <title>Contact</title>
+    <title>Create User</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <style type="text/css">
+    <style type="text/css">
     	.field {
     		display: block;
     		margin-bottom: 5px;
@@ -47,15 +47,17 @@
 			<label for="phoneNumber">Phone Number</label>
 			<input name="phoneNumber" type="text" th:value="${user.phoneNumber}"/>
 		</div>
-		<div class="field">
-          <label for="twitterHandle">Twitter Handle</label>
-          <input name="twitterHandle" type="text"  th:value="${user.twitterHandle}"/>
-        </div>
+		
+	<div class="field">
+       <label for="twitterHandle">Twitter Handle</label>
+       <input name="twitterHandle" type="text"  th:value="${user.twitterHandle}"/>
+    </div>
         
-        <div class="field">
-          <label for="facebookUrl">Facebook URL</label>
-          <input name="facebookUrl" type="text" th:value="${user.facebookUrl}"/>
-        </div>
+    <div class="field">
+       <label for="facebookUrl">Facebook URL</label>
+       <input name="facebookUrl" type="text" th:value="${user.facebookUrl}"/>
+     </div>
+	
 		<div class="field">
 			<label for="file">Image</label>
 			<input name="file" type="file"/>
@@ -64,5 +66,6 @@
 		<input type="submit" th:value="Create"/>
 		<a href="/users" th:href="@{|/users|}">Back</a>
 	</form>
+	
 </body>
 </html>

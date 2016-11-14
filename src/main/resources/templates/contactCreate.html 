@@ -1,8 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layouts/basic">
 <head>
-    <title>Contact</title>
+    <title>Create Contact</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
     <style type="text/css">
     	.field {
     		display: block;
@@ -51,13 +52,13 @@
           <label for="facebookUrl">Facebook URL</label>
           <input name="facebookUrl" type="text" th:value="${contact.facebookUrl}"/>
         </div>
-		<div class="field">
-			<label for="file">Image</label>
-			<input name="file" type="file"/>
-		</div>
+			<div class="field">
+				<label for="file">Image</label>
+				<input name="file" type="file"/>
+			</div>
 		
-		<input type="submit" th:value="Create"/>
-		<a href="/contacts" th:href="@{|/contacts|}">Back</a>
+			<input type="submit" th:value="Create"/>
+			<a href="/contacts" th:href="@{|/contacts|}">Back</a>
 	</form>
 </body>
 </html>
